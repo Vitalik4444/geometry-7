@@ -1,0 +1,598 @@
+<title>Геометрия 7. Тесты к главе 1</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Golos+Text:wght@400;500;600&family=JetBrains+Mono:wght@400;600&family=Unbounded:wght@500;700&display=swap">
+<style>
+/* Тетрадь в клетку: оглавление учебника служит меню, тест — карточка на листе */
+:root {
+  --paper: #f6f8fc;
+  --grid: rgba(60, 96, 190, .09);
+  --card: #ffffff;
+  --ink: #18233d;
+  --muted: #5d6886;
+  --line: #d9e0ef;
+  --accent: #2b4fd0;
+  --accent-soft: #e6ecff;
+  --ok: #1d8049;
+  --ok-soft: #e3f4ea;
+  --bad: #c2392c;
+  --bad-soft: #fbe7e4;
+  --font-display: "Unbounded", "Segoe UI", system-ui, sans-serif;
+  --font-body: "Golos Text", "Segoe UI", system-ui, sans-serif;
+  --font-mono: "JetBrains Mono", Consolas, monospace;
+}
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    --paper: #0f1420; --grid: rgba(125, 155, 255, .07); --card: #171e2d; --ink: #e4e9f5; --muted: #9aa5c2;
+    --line: #2a3349; --accent: #8aa4ff; --accent-soft: #1f2a4a; --ok: #56c48a; --ok-soft: #15301f;
+    --bad: #f27a6d; --bad-soft: #3a1c1a; color-scheme: dark;
+  }
+}
+:root[data-theme="dark"] {
+  --paper: #0f1420; --grid: rgba(125, 155, 255, .07); --card: #171e2d; --ink: #e4e9f5; --muted: #9aa5c2;
+  --line: #2a3349; --accent: #8aa4ff; --accent-soft: #1f2a4a; --ok: #56c48a; --ok-soft: #15301f;
+  --bad: #f27a6d; --bad-soft: #3a1c1a; color-scheme: dark;
+}
+* { box-sizing: border-box; }
+body {
+  background-color: var(--paper);
+  background-image: linear-gradient(var(--grid) 1px, transparent 1px), linear-gradient(90deg, var(--grid) 1px, transparent 1px);
+  background-size: 22px 22px;
+  color: var(--ink);
+  font: 16px/1.55 var(--font-body);
+  min-height: 100vh;
+}
+.wrap {
+  max-width: 820px; margin: 0 auto;
+  padding-block: 28px 64px;
+  padding-left: max(16px, env(safe-area-inset-left, 0px));
+  padding-right: max(16px, env(safe-area-inset-right, 0px));
+  display: flex; flex-direction: column; gap: 22px;
+}
+h1, h2 { font-family: var(--font-display); text-wrap: balance; margin: 0; }
+h1 { font-size: clamp(22px, 4.6vw, 32px); line-height: 1.2; font-weight: 700; }
+h1 .red { color: var(--bad); }
+.eyebrow { font: 600 12px/1 var(--font-mono); letter-spacing: .08em; text-transform: uppercase; color: var(--muted); }
+.lead { color: var(--muted); margin: 0; max-width: 62ch; }
+.head { display: flex; flex-direction: column; gap: 10px; }
+
+.panel { background: var(--card); border: 1px solid var(--line); border-radius: 10px; }
+.modes { display: flex; flex-wrap: wrap; align-items: center; gap: 10px 14px; padding: 14px 16px; }
+.modes .lbl { font-weight: 600; }
+.seg { display: inline-flex; border: 1px solid var(--line); border-radius: 8px; overflow: hidden; }
+.seg button { border: 0; background: transparent; color: var(--ink); font: 500 15px var(--font-body); padding: 7px 14px; cursor: pointer; }
+.seg button + button { border-left: 1px solid var(--line); }
+.seg button[aria-pressed="true"] { background: var(--accent); color: var(--card); }
+.modes .hint { color: var(--muted); font-size: 14px; }
+
+/* оглавление */
+.toc { padding: 6px 0; }
+.toc-title { padding: 14px 18px 6px; display: flex; gap: 10px; align-items: baseline; flex-wrap: wrap; }
+.toc-title h2 { font-size: 17px; color: var(--bad); font-weight: 700; }
+.toc-title span { font-family: var(--font-display); font-size: 17px; font-weight: 500; }
+.row { display: grid; grid-template-columns: 46px minmax(0, 1fr) auto; gap: 4px 12px; align-items: center; padding: 12px 18px; border-top: 1px solid var(--line); }
+.row:first-of-type { border-top: 0; }
+.row .par { font: 600 15px var(--font-mono); color: var(--accent); }
+.row .name { display: flex; align-items: baseline; gap: 8px; min-width: 0; }
+.row .name b { font-weight: 500; }
+.row .dots { flex: 1; border-bottom: 2px dotted var(--line); min-width: 16px; transform: translateY(-4px); }
+.row .pg { font: 400 14px var(--font-mono); color: var(--muted); white-space: nowrap; }
+.row .meta { grid-column: 2; display: flex; gap: 8px; align-items: center; flex-wrap: wrap; font-size: 13px; color: var(--muted); }
+.chip { font: 600 12px var(--font-mono); padding: 2px 8px; border-radius: 99px; background: var(--accent-soft); color: var(--accent); }
+.chip.good { background: var(--ok-soft); color: var(--ok); }
+.chip.weak { background: var(--bad-soft); color: var(--bad); }
+.row .acts { grid-column: 3; grid-row: 1 / span 2; display: flex; gap: 8px; flex-wrap: wrap; justify-content: flex-end; }
+.btn { font: 600 15px var(--font-body); border-radius: 8px; padding: 9px 16px; cursor: pointer; border: 1px solid var(--accent); background: var(--accent); color: var(--card); }
+.btn.ghost { background: transparent; color: var(--accent); }
+.btn:hover { filter: brightness(1.06); }
+.btn:focus-visible, .seg button:focus-visible, .opt:focus-visible, input:focus-visible { outline: 3px solid var(--accent); outline-offset: 2px; }
+.row.mix .par { color: var(--bad); }
+@media (max-width: 560px) {
+  .row { grid-template-columns: 38px minmax(0, 1fr); }
+  .row .acts { grid-column: 2; grid-row: auto; }
+  .row .dots, .row .pg { display: none; }
+}
+
+/* тест */
+.qtop { display: flex; justify-content: space-between; align-items: center; gap: 12px; flex-wrap: wrap; }
+.qtop .topic { font-weight: 600; }
+.stat { font: 600 14px var(--font-mono); color: var(--muted); display: flex; gap: 14px; }
+.stat .k { color: var(--ok); } .stat .x { color: var(--bad); }
+.bar { height: 6px; background: var(--line); border-radius: 99px; overflow: hidden; }
+.bar i { display: block; height: 100%; background: var(--accent); width: 0; transition: width .25s; }
+.qcard { padding: 22px 20px; display: flex; flex-direction: column; gap: 18px; }
+.qnum { font: 600 13px var(--font-mono); color: var(--muted); }
+.qtext { font-size: clamp(18px, 3.4vw, 21px); line-height: 1.45; font-weight: 500; margin: 0; }
+.opts { display: grid; gap: 10px; }
+.opt { display: grid; grid-template-columns: 34px minmax(0, 1fr); gap: 12px; align-items: center; text-align: left; width: 100%;
+  padding: 12px 14px; border-radius: 9px; border: 1.5px solid var(--line); background: var(--card); color: var(--ink);
+  font: 400 17px/1.4 var(--font-body); cursor: pointer; }
+.opt:hover:not(:disabled) { border-color: var(--accent); }
+.opt .l { width: 30px; height: 30px; border-radius: 50%; display: grid; place-items: center; font: 600 14px var(--font-mono); background: var(--accent-soft); color: var(--accent); }
+.opt:disabled { cursor: default; }
+.opt.right { border-color: var(--ok); background: var(--ok-soft); }
+.opt.right .l { background: var(--ok); color: var(--card); }
+.opt.wrong { border-color: var(--bad); background: var(--bad-soft); }
+.opt.wrong .l { background: var(--bad); color: var(--card); }
+.expl { border-left: 3px solid var(--ok); padding: 10px 14px; background: var(--ok-soft); border-radius: 0 8px 8px 0; }
+.expl.no { border-left-color: var(--bad); background: var(--bad-soft); }
+.expl b { display: block; margin-bottom: 2px; }
+.qfoot { display: flex; justify-content: space-between; gap: 10px; flex-wrap: wrap; }
+.keys { color: var(--muted); font-size: 13px; align-self: center; }
+
+/* итог */
+.res { padding: 26px 20px; display: flex; flex-direction: column; gap: 16px; }
+.score { display: flex; align-items: baseline; gap: 18px; flex-wrap: wrap; }
+.score .big { font: 700 clamp(40px, 9vw, 60px)/1 var(--font-display); }
+.score .of { color: var(--muted); font-size: 18px; }
+.mark { font: 700 22px var(--font-display); width: 54px; height: 54px; border-radius: 50%; display: grid; place-items: center; border: 3px solid var(--bad); color: var(--bad); transform: rotate(-8deg); }
+.btns { display: flex; gap: 10px; flex-wrap: wrap; }
+.mist { display: flex; flex-direction: column; gap: 10px; }
+.mist h2, .ans h2 { font-size: 17px; }
+.item { padding: 14px 16px; border: 1px solid var(--line); border-radius: 9px; background: var(--card); display: flex; flex-direction: column; gap: 6px; }
+.item .q { font-weight: 500; }
+.item .y { color: var(--bad); font-size: 15px; }
+.item .c { color: var(--ok); font-size: 15px; font-weight: 600; }
+.item .e { color: var(--muted); font-size: 14px; }
+.item .n { font: 600 12px var(--font-mono); color: var(--muted); }
+
+.tin { display: flex; gap: 10px; flex-wrap: wrap; align-items: center; }
+#tInput { font: 600 20px var(--font-mono); padding: 10px 14px; border-radius: 8px; border: 1.5px solid var(--line); background: var(--card); color: var(--ink); width: 170px; }
+#tInput.ok { border-color: var(--ok); } #tInput.no { border-color: var(--bad); }
+.unit { font: 600 18px var(--font-mono); color: var(--muted); }
+.hintbox { border-left: 3px solid var(--accent); padding: 10px 14px; background: var(--accent-soft); border-radius: 0 8px 8px 0; }
+.sol { display: flex; flex-direction: column; gap: 6px; }
+.sol ol { margin: 0; padding-left: 22px; display: flex; flex-direction: column; gap: 4px; }
+.sol .ansline { font-weight: 600; }
+.draw { color: var(--muted); font-size: 14px; margin: 0; }
+.fig { margin: 0; display: flex; flex-direction: column; align-items: center; gap: 4px; padding: 8px 0; border-block: 1px dashed var(--line); }
+.fig svg { width: 100%; max-width: 440px; height: auto; overflow: hidden; display: block; }
+.fig figcaption { font-size: 13px; color: var(--muted); text-align: center; }
+.fig .ln { stroke: var(--ink); stroke-width: 1.7; fill: none; stroke-linecap: round; }
+.fig .s1 { stroke: var(--muted); stroke-width: 1; opacity: .75; }
+.fig .s2 { stroke: var(--accent); stroke-dasharray: 6 4; }
+.fig .s3 { stroke-width: 3; }
+.fig .pt { fill: var(--ink); }
+.fig .lb { font: 600 15px var(--font-mono); fill: var(--ink); text-anchor: middle; dominant-baseline: central; }
+.fig .lb.it { font: italic 600 16px var(--font-body); }
+.fig .arc { stroke: var(--accent); stroke-width: 1.5; fill: none; }
+.fig .arc.unk { stroke: var(--bad); stroke-width: 2; }
+.fig .at { font: 600 12.5px var(--font-mono); fill: var(--accent); text-anchor: middle; dominant-baseline: central; paint-order: stroke; stroke: var(--card); stroke-width: 3px; }
+.fig .at.unk { fill: var(--bad); }
+.fig .rt { stroke: var(--accent); stroke-width: 1.4; fill: none; }
+.fig .dim { stroke: var(--muted); stroke-width: 1.2; }
+.fig .dim.unk { stroke: var(--bad); stroke-width: 1.6; }
+.fig .ext { stroke: var(--muted); stroke-width: 1; stroke-dasharray: 2 3; }
+.fig .dt { font: 600 13px var(--font-mono); fill: var(--muted); text-anchor: middle; paint-order: stroke; stroke: var(--card); stroke-width: 3px; }
+.fig .dt.unk { fill: var(--bad); }
+.fig .ct { font: 500 13px var(--font-mono); fill: var(--muted); text-anchor: middle; dominant-baseline: central; }
+.item .fig { align-items: flex-start; border: 0; padding: 4px 0; }
+.item .fig svg { max-width: 320px; }
+.ans { display: flex; flex-direction: column; gap: 12px; }
+.anshead { display: flex; gap: 12px; align-items: center; flex-wrap: wrap; justify-content: space-between; }
+#search { font: 16px var(--font-body); padding: 9px 12px; border-radius: 8px; border: 1px solid var(--line); background: var(--card); color: var(--ink); width: min(100%, 320px); }
+.foot { color: var(--muted); font-size: 13px; }
+@media (prefers-reduced-motion: reduce) { .bar i { transition: none; } }
+</style>
+
+<div class="wrap">
+  <!-- Меню -->
+  <section id="vMenu" class="head" style="gap:22px">
+    <div class="head">
+      <span class="eyebrow">Геометрия · 7 класс · 1200 тестовых вопросов · 600 задач с чертежами</span>
+      <h1><span class="red">Глава 1.</span> Простейшие геометрические фигуры и их свойства</h1>
+      <p class="lead">К каждому параграфу есть 200 тестовых вопросов и 100 задач. В тесте нужно выбрать один из четырёх ответов. В задаче ответ вводят числом, есть подсказка и подробное решение.</p>
+    </div>
+    <div class="panel modes">
+      <span class="lbl">Заданий за раз:</span>
+      <div class="seg" role="group" aria-label="Количество вопросов">
+        <button type="button" data-n="10">10</button>
+        <button type="button" data-n="20" aria-pressed="true">20</button>
+        <button type="button" data-n="50">50</button>
+        <button type="button" data-n="200">Все</button>
+      </div>
+      <span class="hint">Задания выбираются случайно.</span>
+    </div>
+    <div class="panel toc" id="toc">
+      <div class="toc-title"><h2>Глава 1.</h2><span>Содержание</span></div>
+    </div>
+    <p class="foot">В задаче две попытки, потом показывается решение. Оценка: 90% и выше — «5», от 70% — «4», от 50% — «3». Лучший результат по каждому параграфу запоминается в этом браузере.</p>
+  </section>
+
+  <!-- Тест -->
+  <section id="vQuiz" hidden style="display:flex;flex-direction:column;gap:16px">
+    <div class="qtop">
+      <span class="topic" id="qTopic"></span>
+      <span class="stat"><span id="qPos"></span><span class="k" id="qOk"></span><span class="x" id="qBad"></span></span>
+    </div>
+    <div class="bar"><i id="qBar"></i></div>
+    <div class="panel qcard">
+      <span class="qnum" id="qNum"></span>
+      <p class="qtext" id="qText"></p>
+      <div class="opts" id="qOpts"></div>
+      <div id="qExpl" hidden></div>
+    </div>
+    <div class="qfoot">
+      <button type="button" class="btn ghost" id="qExit">Закончить тест</button>
+      <span class="keys">Клавиши 1–4 — ответ, Enter — дальше</span>
+      <button type="button" class="btn" id="qNext" hidden>Следующий вопрос</button>
+    </div>
+  </section>
+
+  <!-- Задачи -->
+  <section id="vTask" hidden style="display:flex;flex-direction:column;gap:16px">
+    <div class="qtop">
+      <span class="topic" id="tTopic"></span>
+      <span class="stat"><span id="tPos"></span><span class="k" id="tOk"></span><span class="x" id="tBad"></span></span>
+    </div>
+    <div class="bar"><i id="tBar"></i></div>
+    <div class="panel qcard">
+      <span class="qnum" id="tNum"></span>
+      <p class="qtext" id="tText"></p>
+      <figure class="fig" id="tFig"></figure>
+      <p class="draw">Перенесите чертёж в тетрадь, запишите «Дано» и «Найти», затем решите задачу. Знаком «?» отмечено то, что нужно найти.</p>
+      <form class="tin" id="tForm" autocomplete="off">
+        <label for="tInput" style="font-weight:600">Ответ:</label>
+        <input id="tInput" inputmode="decimal" placeholder="число">
+        <span class="unit" id="tUnit"></span>
+        <button type="submit" class="btn" id="tCheck">Проверить</button>
+        <button type="button" class="btn ghost" id="tHintBtn">Подсказка</button>
+      </form>
+      <div id="tMsg" hidden></div>
+      <div class="hintbox" id="tHint" hidden></div>
+      <div class="sol expl" id="tSol" hidden></div>
+    </div>
+    <div class="qfoot">
+      <button type="button" class="btn ghost" id="tExit">Закончить</button>
+      <button type="button" class="btn ghost" id="tShow">Показать решение</button>
+      <button type="button" class="btn" id="tNext" hidden>Следующая задача</button>
+    </div>
+  </section>
+
+  <!-- Итог -->
+  <section id="vRes" hidden style="display:flex;flex-direction:column;gap:18px">
+    <div class="panel res">
+      <span class="eyebrow" id="rTopic"></span>
+      <div class="score"><span class="big" id="rScore"></span><span class="of" id="rOf"></span><span class="mark" id="rMark"></span></div>
+      <div class="btns">
+        <button type="button" class="btn" id="rAgain">Новый тест по теме</button>
+        <button type="button" class="btn ghost" id="rFix">Работа над ошибками</button>
+        <button type="button" class="btn ghost" id="rMenu">К оглавлению</button>
+      </div>
+    </div>
+    <div class="mist" id="rMist"></div>
+  </section>
+
+  <!-- Ответы -->
+  <section id="vAns" hidden class="ans">
+    <div class="anshead">
+      <div class="head" style="gap:6px"><span class="eyebrow">Ключ ответов: тесты и задачи</span><h2 id="aTitle"></h2></div>
+      <button type="button" class="btn ghost" id="aBack">К оглавлению</button>
+    </div>
+    <input id="search" type="search" placeholder="Поиск по вопросам" aria-label="Поиск по вопросам">
+    <div class="ans" id="aList"></div>
+  </section>
+</div>
+
+<script>
+const DATA = /*DATA*/;
+const TASKS = /*TASKS*/.map(([t, q, a, u, h, s, f], i) => ({ id: i, t, q, a, u, h, s, f }));
+const T = DATA.topics;
+const ITEMS = DATA.items.map(([t, q, o, a, e], i) => ({ id: i, t, q, o, a, e }));
+const LET = ["А", "Б", "В", "Г"];
+const $ = id => document.getElementById(id);
+let size = 20, run = null;
+
+function store(k, v) { try { if (v === undefined) return JSON.parse(localStorage.getItem(k) || "null"); localStorage.setItem(k, JSON.stringify(v)); } catch (e) { return null; } }
+function shuffle(a) { a = a.slice(); for (let i = a.length - 1; i > 0; i--) { const j = Math.floor(Math.random() * (i + 1)); [a[i], a[j]] = [a[j], a[i]]; } return a; }
+function esc(s) { return String(s).replace(/[&<>"]/g, c => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;" }[c])); }
+function show(v) { ["vMenu", "vQuiz", "vTask", "vRes", "vAns"].forEach(x => $(x).hidden = x !== v); window.scrollTo(0, 0); }
+function markOf(p) { return p >= 90 ? 5 : p >= 70 ? 4 : p >= 50 ? 3 : 2; }
+
+function renderMenu() {
+  const toc = $("toc");
+  toc.querySelectorAll(".row").forEach(r => r.remove());
+  const rows = T.map((t, i) => ({ i, par: t.n, name: t.name, pg: "с. " + t.page })).concat([{ i: -1, par: "∑", name: "Смешанный тест по всей главе", pg: "1200" }]);
+  for (const r of rows) {
+    const best = store("best:" + r.i);
+    const chip = best ? `<span class="chip ${best >= 70 ? "good" : best < 50 ? "weak" : ""}">тест: ${best}%</span>` : "";
+    const tb = store("tbest:" + r.i);
+    const tchip = tb ? `<span class="chip ${tb >= 70 ? "good" : tb < 50 ? "weak" : ""}">задачи: ${tb}%</span>` : "";
+    const el = document.createElement("div");
+    el.className = "row" + (r.i < 0 ? " mix" : "");
+    el.innerHTML = `<span class="par">${esc(r.par)}</span>
+      <span class="name"><b>${esc(r.name)}</b><span class="dots"></span><span class="pg">${r.pg}</span></span>
+      <span class="meta">${r.i < 0 ? "задания из всех параграфов" : "200 вопросов · 100 задач"} ${chip}${tchip}</span>
+      <span class="acts">${r.i >= 0 ? `<button type="button" class="btn ghost" data-ans="${r.i}">Ответы</button>` : ""}<button type="button" class="btn ghost" data-task="${r.i}">Задачи</button><button type="button" class="btn" data-go="${r.i}">Тест</button></span>`;
+    toc.appendChild(el);
+  }
+}
+
+function start(topic, list) {
+  const pool = topic < 0 ? ITEMS : ITEMS.filter(x => x.t === topic);
+  const qs = list || shuffle(pool).slice(0, Math.min(size, pool.length));
+  run = { topic, qs: qs.map(q => ({ q, order: shuffle([0, 1, 2, 3]), pick: null })), i: 0, ok: 0, bad: 0, fix: !!list };
+  show("vQuiz");
+  renderQ();
+}
+
+function renderQ() {
+  const r = run, cur = r.qs[r.i], q = cur.q;
+  $("qTopic").textContent = r.topic < 0 ? "Вся глава 1" : `${T[r.topic].n}. ${T[r.topic].name}`;
+  $("qPos").textContent = `${r.i + 1} / ${r.qs.length}`;
+  $("qOk").textContent = "✓ " + r.ok;
+  $("qBad").textContent = "✗ " + r.bad;
+  $("qBar").style.width = (r.i / r.qs.length * 100) + "%";
+  $("qNum").textContent = `Вопрос ${r.i + 1}` + (r.topic < 0 ? ` · ${T[q.t].n}` : "");
+  $("qText").textContent = q.q;
+  const box = $("qOpts");
+  box.innerHTML = "";
+  cur.order.forEach((oi, k) => {
+    const b = document.createElement("button");
+    b.type = "button"; b.className = "opt"; b.dataset.oi = oi;
+    b.innerHTML = `<span class="l">${LET[k]}</span><span>${esc(q.o[oi])}</span>`;
+    b.addEventListener("click", () => answer(oi));
+    box.appendChild(b);
+  });
+  $("qExpl").hidden = true;
+  $("qNext").hidden = true;
+}
+
+function answer(oi) {
+  const r = run, cur = r.qs[r.i], q = cur.q;
+  if (cur.pick !== null) return;
+  cur.pick = oi;
+  const good = oi === q.a;
+  good ? r.ok++ : r.bad++;
+  $("qOpts").querySelectorAll(".opt").forEach(b => {
+    const v = +b.dataset.oi;
+    b.disabled = true;
+    if (v === q.a) b.classList.add("right");
+    else if (v === oi) b.classList.add("wrong");
+  });
+  const ex = $("qExpl");
+  ex.className = "expl" + (good ? "" : " no");
+  ex.innerHTML = `<b>${good ? "Верно!" : "Неверно. Правильный ответ: " + esc(q.o[q.a])}</b>${esc(q.e)}`;
+  ex.hidden = false;
+  $("qOk").textContent = "✓ " + r.ok;
+  $("qBad").textContent = "✗ " + r.bad;
+  const nx = $("qNext");
+  nx.textContent = r.i + 1 < r.qs.length ? "Следующий вопрос" : "Показать результат";
+  nx.hidden = false;
+  nx.focus({ preventScroll: true });
+}
+
+function next() { if (run.i + 1 < run.qs.length) { run.i++; renderQ(); } else finish(); }
+
+function finish() {
+  const r = run;
+  if (r.tasks) return finishTasks();
+  const done = r.qs.filter(x => x.pick !== null);
+  const total = done.length;
+  const p = total ? Math.round(r.ok / total * 100) : 0;
+  if (!r.fix && total === r.qs.length) {
+    const k = "best:" + r.topic;
+    if ((store(k) || 0) < p) store(k, p);
+  }
+  $("rTopic").textContent = (r.topic < 0 ? "Вся глава 1" : `${T[r.topic].n}. ${T[r.topic].name}`) + (r.fix ? " · работа над ошибками" : "");
+  $("rScore").textContent = `${r.ok} из ${total}`;
+  $("rOf").textContent = total ? `${p}% правильных` : "Нет ответов";
+  $("rMark").textContent = total ? markOf(p) : "–";
+  const wrong = done.filter(x => x.pick !== x.q.a);
+  $("rFix").hidden = !wrong.length;
+  $("rMist").innerHTML = wrong.length
+    ? `<h2>Ошибки (${wrong.length})</h2>` + wrong.map(x => `<div class="item"><span class="q">${esc(x.q.q)}</span><span class="y">Ваш ответ: ${esc(x.q.o[x.pick])}</span><span class="c">Правильно: ${esc(x.q.o[x.q.a])}</span><span class="e">${esc(x.q.e)}</span></div>`).join("")
+    : (total ? `<h2>Ошибок нет. Отличная работа!</h2>` : "");
+  run.wrong = wrong.map(x => x.q);
+  show("vRes");
+}
+
+function answers(t) {
+  $("aTitle").textContent = `${T[t].n}. ${T[t].name}`;
+  $("search").value = "";
+  const list = ITEMS.filter(x => x.t === t).map((x, i) => ({ n: `Тест № ${i + 1}`, q: x.q, a: x.o[x.a], e: x.e }))
+    .concat(TASKS.filter(x => x.t === t).map((x, i) => ({ n: `Задача № ${i + 1}`, q: x.q, f: x.f, a: fmtNum(x.a) + (x.u ? " " + x.u : ""), e: x.s.join(" ") })));
+  const draw = f => {
+    const s = f.trim().toLowerCase();
+    $("aList").innerHTML = list.filter(x => !s || x.q.toLowerCase().includes(s))
+      .map(x => `<div class="item"><span class="n">${x.n}</span><span class="q">${esc(x.q)}</span>${x.f ? `<figure class="fig">${drawFig(x.f)}</figure>` : ""}<span class="c">Ответ: ${esc(x.a)}</span><span class="e">${esc(x.e)}</span></div>`).join("") || `<p class="lead">Ничего не найдено. Попробуйте другое слово.</p>`;
+  };
+  $("search").oninput = e => draw(e.target.value);
+  draw("");
+  show("vAns");
+}
+
+document.querySelector(".seg").addEventListener("click", e => {
+  const b = e.target.closest("button"); if (!b) return;
+  size = +b.dataset.n;
+  document.querySelectorAll(".seg button").forEach(x => x.setAttribute("aria-pressed", x === b));
+  store("size", size);
+});
+$("toc").addEventListener("click", e => {
+  const g = e.target.closest("[data-go]"), a = e.target.closest("[data-ans]");
+  if (g) start(+g.dataset.go);
+  if (a) answers(+a.dataset.ans);
+  const tk = e.target.closest("[data-task]");
+  if (tk) startTasks(+tk.dataset.task);
+});
+$("qNext").addEventListener("click", next);
+$("qExit").addEventListener("click", finish);
+$("rAgain").addEventListener("click", () => run.tasks ? startTasks(run.topic) : start(run.topic));
+$("rFix").addEventListener("click", () => run.tasks ? startTasks(run.topic, shuffle(run.wrong)) : start(run.topic, shuffle(run.wrong)));
+$("rMenu").addEventListener("click", () => { renderMenu(); show("vMenu"); });
+$("aBack").addEventListener("click", () => show("vMenu"));
+document.addEventListener("keydown", e => {
+  if ($("vQuiz").hidden || e.target.tagName === "INPUT") return;
+  const k = "1234".indexOf(e.key);
+  if (k >= 0 && run.qs[run.i].pick === null) answer(run.qs[run.i].order[k]);
+  else if (e.key === "Enter" && !$("qNext").hidden && document.activeElement !== $("qNext")) { e.preventDefault(); next(); }
+});
+
+// ---------- задачи с вводом ответа
+function parseNum(v) {
+  const m = String(v).replace(/\s/g, "").replace(",", ".").match(/^[-+]?\d*\.?\d+/);
+  return m ? parseFloat(m[0]) : NaN;
+}
+function fmtNum(x) { return Number.isInteger(x) ? String(x) : String(+x.toFixed(2)).replace(".", ","); }
+
+function drawFig(f) {
+  if (!f) return "";
+  const o = [], n = v => +v.toFixed(1);
+  const pt = (cx, cy, r, a) => [n(cx + r * Math.cos(a * Math.PI / 180)), n(cy - r * Math.sin(a * Math.PI / 180))];
+  for (const p of f.p) {
+    const k = p[0];
+    if (k === "L") {
+      const [, x1, y1, x2, y2, st] = p;
+      o.push(`<line x1="${x1}" y1="${y1}" x2="${x2}" y2="${y2}" class="ln s${st}"/>`);
+    } else if (k === "P") {
+      const [, x, y, l, dx, dy, nod] = p;
+      if (!nod) o.push(`<circle cx="${x}" cy="${y}" r="3.2" class="pt"/>`);
+      if (l) o.push(`<text x="${n(x + dx)}" y="${n(y + dy)}" class="lb${nod ? " it" : ""}">${esc(l)}</text>`);
+    } else if (k === "A") {
+      const [, cx, cy, r, a1, a2, t, u] = p;
+      let span = ((a2 - a1) % 360 + 360) % 360 || 360;
+      const [x1, y1] = pt(cx, cy, r, a1), [x2, y2] = pt(cx, cy, r, a1 + span);
+      o.push(`<path d="M${x1} ${y1} A${r} ${r} 0 ${span > 180 ? 1 : 0} 0 ${x2} ${y2}" class="arc${u ? " unk" : ""}"/>`);
+      if (t) {
+        const [tx, ty] = pt(cx, cy, r + (span < 20 ? 20 : 13), a1 + span / 2);
+        o.push(`<text x="${tx}" y="${ty}" class="at${u ? " unk" : ""}">${esc(t)}</text>`);
+      }
+    } else if (k === "R") {
+      const [, cx, cy, a, sz] = p;
+      const [ux, uy] = pt(0, 0, sz, a), [vx, vy] = pt(0, 0, sz, a + 90);
+      o.push(`<path d="M${n(cx + ux)} ${n(cy + uy)} L${n(cx + ux + vx)} ${n(cy + uy + vy)} L${n(cx + vx)} ${n(cy + vy)}" class="rt"/>`);
+    } else if (k === "D") {
+      const [, x1, x2, y, y0, t, u] = p;
+      o.push(`<line x1="${x1}" y1="${y0}" x2="${x1}" y2="${y}" class="ext"/><line x1="${x2}" y1="${y0}" x2="${x2}" y2="${y}" class="ext"/>`);
+      o.push(`<line x1="${x1}" y1="${y}" x2="${x2}" y2="${y}" class="dim${u ? " unk" : ""}"/>`);
+      o.push(`<line x1="${x1}" y1="${y - 5}" x2="${x1}" y2="${y + 5}" class="dim${u ? " unk" : ""}"/><line x1="${x2}" y1="${y - 5}" x2="${x2}" y2="${y + 5}" class="dim${u ? " unk" : ""}"/>`);
+      o.push(`<text x="${n((x1 + x2) / 2)}" y="${y - 6}" class="dt${u ? " unk" : ""}">${esc(t)}</text>`);
+    } else if (k === "C") {
+      const [, cx, cy, r] = p;
+      o.push(`<circle cx="${cx}" cy="${cy}" r="${r}" class="ln"/>`);
+    } else if (k === "T") {
+      const [, x, y, t] = p;
+      o.push(`<text x="${x}" y="${y}" class="ct">${esc(t)}</text>`);
+    }
+  }
+  return `<svg viewBox="0 0 400 ${f.h}" role="img" aria-label="Чертёж к задаче">${o.join("")}</svg>` + (f.c ? `<figcaption>${esc(f.c)}</figcaption>` : "");
+}
+
+function startTasks(topic, list) {
+  const pool = topic < 0 ? TASKS : TASKS.filter(x => x.t === topic);
+  const qs = list || shuffle(pool).slice(0, Math.min(size, pool.length));
+  run = { tasks: true, topic, qs: qs.map(q => ({ q, tries: 0, done: false, ok: false, hint: false })), i: 0, ok: 0, bad: 0, fix: !!list };
+  show("vTask");
+  renderT();
+}
+
+function renderT() {
+  const r = run, cur = r.qs[r.i], q = cur.q;
+  $("tTopic").textContent = (r.topic < 0 ? "Вся глава 1" : `${T[r.topic].n}. ${T[r.topic].name}`) + " · задачи";
+  $("tPos").textContent = `${r.i + 1} / ${r.qs.length}`;
+  $("tOk").textContent = "✓ " + r.ok;
+  $("tBad").textContent = "✗ " + r.bad;
+  $("tBar").style.width = (r.i / r.qs.length * 100) + "%";
+  $("tNum").textContent = `Задача ${r.i + 1}` + (r.topic < 0 ? ` · ${T[q.t].n}` : "");
+  $("tText").textContent = q.q;
+  $("tFig").innerHTML = drawFig(q.f);
+  $("tFig").hidden = !q.f;
+  $("tUnit").textContent = q.u;
+  const inp = $("tInput");
+  inp.value = ""; inp.className = ""; inp.disabled = false;
+  $("tCheck").disabled = false;
+  $("tHintBtn").disabled = false;
+  $("tMsg").hidden = true;
+  $("tHint").hidden = true;
+  $("tSol").hidden = true;
+  $("tNext").hidden = true;
+  $("tShow").hidden = false;
+  inp.focus({ preventScroll: true });
+}
+
+function msg(text, good) {
+  const m = $("tMsg");
+  m.className = "expl" + (good ? "" : " no");
+  m.innerHTML = text;
+  m.hidden = false;
+}
+
+function solve() {
+  const r = run, cur = r.qs[r.i], q = cur.q;
+  cur.done = true;
+  $("tInput").disabled = true;
+  $("tCheck").disabled = true;
+  $("tHintBtn").disabled = true;
+  $("tShow").hidden = true;
+  const sol = $("tSol");
+  sol.className = "sol expl" + (cur.ok ? "" : " no");
+  sol.innerHTML = `<b>Решение</b><ol>${q.s.map(x => `<li>${esc(x)}</li>`).join("")}</ol><span class="ansline">Ответ: ${fmtNum(q.a)}${q.u ? " " + esc(q.u) : ""}.</span>`;
+  sol.hidden = false;
+  $("tOk").textContent = "✓ " + r.ok;
+  $("tBad").textContent = "✗ " + r.bad;
+  const nx = $("tNext");
+  nx.textContent = r.i + 1 < r.qs.length ? "Следующая задача" : "Показать результат";
+  nx.hidden = false;
+  nx.focus({ preventScroll: true });
+}
+
+function checkT(e) {
+  e.preventDefault();
+  const r = run, cur = r.qs[r.i], q = cur.q;
+  if (cur.done) return;
+  const v = parseNum($("tInput").value);
+  if (Number.isNaN(v)) { msg("<b>Введите ответ числом.</b>Например: 45 или 2,5. Единицы измерения писать не нужно.", false); return; }
+  cur.tries++;
+  if (Math.abs(v - q.a) < 1e-6) {
+    cur.ok = true; r.ok++;
+    $("tInput").className = "ok";
+    msg(cur.tries === 1 ? "<b>Верно!</b>Сверьте своё решение с образцом ниже." : "<b>Верно, со второй попытки.</b>Посмотрите решение ниже.", true);
+    solve();
+  } else if (cur.tries === 1) {
+    $("tInput").className = "no";
+    msg(`<b>Пока неверно.</b>Проверьте вычисления и попробуйте ещё раз.${cur.hint ? "" : " Можно открыть подсказку."}`, false);
+    $("tInput").select();
+  } else {
+    r.bad++;
+    $("tInput").className = "no";
+    msg(`<b>Неверно.</b>Ваш ответ: ${esc(fmtNum(v))}. Разберите решение.`, false);
+    solve();
+  }
+}
+
+$("tForm").addEventListener("submit", checkT);
+$("tHintBtn").addEventListener("click", () => { const cur = run.qs[run.i]; cur.hint = true; const h = $("tHint"); h.innerHTML = `<b>Подсказка.</b> ${esc(cur.q.h)}`; h.hidden = false; });
+$("tShow").addEventListener("click", () => { const cur = run.qs[run.i]; if (cur.done) return; run.bad++; $("tMsg").hidden = true; solve(); });
+$("tNext").addEventListener("click", () => { if (run.i + 1 < run.qs.length) { run.i++; renderT(); } else finishTasks(); });
+$("tExit").addEventListener("click", finishTasks);
+document.addEventListener("keydown", e => {
+  if ($("vTask").hidden) return;
+  if (e.key === "Enter" && !$("tNext").hidden && document.activeElement !== $("tNext")) { e.preventDefault(); $("tNext").click(); }
+});
+
+function finishTasks() {
+  const r = run;
+  const done = r.qs.filter(x => x.done);
+  const total = done.length;
+  const p = total ? Math.round(r.ok / total * 100) : 0;
+  if (!r.fix && total === r.qs.length) { const k = "tbest:" + r.topic; if ((store(k) || 0) < p) store(k, p); }
+  $("rTopic").textContent = (r.topic < 0 ? "Вся глава 1" : `${T[r.topic].n}. ${T[r.topic].name}`) + " · задачи" + (r.fix ? " · работа над ошибками" : "");
+  $("rScore").textContent = `${r.ok} из ${total}`;
+  $("rOf").textContent = total ? `${p}% задач решено верно` : "Нет решённых задач";
+  $("rMark").textContent = total ? markOf(p) : "–";
+  const wrong = done.filter(x => !x.ok);
+  $("rFix").hidden = !wrong.length;
+  $("rMist").innerHTML = wrong.length
+    ? `<h2>Задачи с ошибкой (${wrong.length})</h2>` + wrong.map(x => `<div class="item"><span class="q">${esc(x.q.q)}</span>${x.q.f ? `<figure class="fig">${drawFig(x.q.f)}</figure>` : ""}<span class="c">Ответ: ${fmtNum(x.q.a)}${x.q.u ? " " + esc(x.q.u) : ""}</span><span class="e">${x.q.s.map(esc).join(" ")}</span></div>`).join("")
+    : (total ? `<h2>Все задачи решены верно. Отличная работа!</h2>` : "");
+  run.wrong = wrong.map(x => x.q);
+  show("vRes");
+}
+
+(function init() {
+  const s = store("size");
+  if ([10, 20, 50, 200].includes(s)) { size = s; document.querySelectorAll(".seg button").forEach(x => x.setAttribute("aria-pressed", +x.dataset.n === s)); }
+  renderMenu();
+})();
+</script>
