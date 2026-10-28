@@ -127,6 +127,9 @@ h1 .red { color: var(--bad); }
 .score .big { font: 700 clamp(40px, 9vw, 60px)/1 var(--font-display); }
 .score .of { color: var(--muted); font-size: 18px; }
 .mark { font: 700 22px var(--font-display); width: 54px; height: 54px; border-radius: 50%; display: grid; place-items: center; border: 3px solid var(--bad); color: var(--bad); transform: rotate(-8deg); }
+.lock { display: flex; flex-wrap: wrap; align-items: center; gap: 10px; margin-top: 14px; }
+.lock input { font: 600 16px var(--font-mono); width: 140px; padding: 8px 10px; border: 1px solid var(--line); border-radius: 8px; background: var(--card); color: var(--ink); }
+.lock .msg { font-size: 14px; color: var(--bad); }
 .btns { display: flex; gap: 10px; flex-wrap: wrap; }
 .mist { display: flex; flex-direction: column; gap: 10px; }
 .mist h2, .ans h2 { font-size: 17px; }
@@ -198,6 +201,10 @@ h1 .red { color: var(--bad); }
       <div class="toc-title"><h2>Глава 1.</h2><span>Содержание</span></div>
     </div>
     <p class="foot">В задаче две попытки, потом показывается решение. Оценка: 90% и выше — «5», от 70% — «4», от 50% — «3». Лучший результат по каждому параграфу запоминается в этом браузере.</p>
+    <form class="lock" id="lock" autocomplete="off">
+      <button type="button" class="btn ghost" id="lockOpen">Ответы для учителя</button>
+      <span id="lockForm" hidden><input id="lockPw" type="password" inputmode="numeric" placeholder="Пароль" aria-label="Пароль к ответам"> <button type="submit" class="btn">Открыть</button> <span class="msg" id="lockMsg"></span></span>
+    </form>
   </section>
 
   <!-- Тест -->
@@ -282,7 +289,9 @@ const T = DATA.topics;
 const ITEMS = DATA.items.map(([t, q, o, a, e], i) => ({ id: i, t, q, o, a, e }));
 const LET = ["А", "Б", "В", "Г"];
 const $ = id => document.getElementById(id);
-let size = 20, run = null;
+let size = 20, run = null, teacher = false;
+try { teacher = sessionStorage.getItem("teacher") === "1"; } catch (e) {}
+function pwHash(x) { let v = 2166136261; for (const c of new TextEncoder().encode(x)) v = Math.imul(v ^ c, 16777619) >>> 0; return v; }
 
 function store(k, v) { try { if (v === undefined) return JSON.parse(localStorage.getItem(k) || "null"); localStorage.setItem(k, JSON.stringify(v)); } catch (e) { return null; } }
 function shuffle(a) { a = a.slice(); for (let i = a.length - 1; i > 0; i--) { const j = Math.floor(Math.random() * (i + 1)); [a[i], a[j]] = [a[j], a[i]]; } return a; }
@@ -304,7 +313,7 @@ function renderMenu() {
     el.innerHTML = `<span class="par">${esc(r.par)}</span>
       <span class="name"><b>${esc(r.name)}</b><span class="dots"></span><span class="pg">${r.pg}</span></span>
       <span class="meta">${r.i < 0 ? "задания из всех параграфов" : "200 вопросов · 100 задач"} ${chip}${tchip}</span>
-      <span class="acts">${r.i >= 0 ? `<button type="button" class="btn ghost" data-ans="${r.i}">Ответы</button>` : ""}<button type="button" class="btn ghost" data-task="${r.i}">Задачи</button><button type="button" class="btn" data-go="${r.i}">Тест</button></span>`;
+      <span class="acts">${r.i >= 0 && teacher ? `<button type="button" class="btn ghost" data-ans="${r.i}">Ответы</button>` : ""}<button type="button" class="btn ghost" data-task="${r.i}">Задачи</button><button type="button" class="btn" data-go="${r.i}">Тест</button></span>`;
     toc.appendChild(el);
   }
 }
@@ -389,6 +398,7 @@ function finish() {
 }
 
 function answers(t) {
+  if (!teacher) return;
   $("aTitle").textContent = `${T[t].n}. ${T[t].name}`;
   $("search").value = "";
   const list = ITEMS.filter(x => x.t === t).map((x, i) => ({ n: `Тест № ${i + 1}`, q: x.q, a: x.o[x.a], e: x.e }))
@@ -416,6 +426,22 @@ $("toc").addEventListener("click", e => {
   const tk = e.target.closest("[data-task]");
   if (tk) startTasks(+tk.dataset.task);
 });
+function setTeacher() {
+  $("lockOpen").textContent = teacher ? "Скрыть ответы" : "Ответы для учителя";
+  $("lockForm").hidden = true;
+  renderMenu();
+}
+$("lockOpen").addEventListener("click", () => {
+  if (teacher) { teacher = false; try { sessionStorage.removeItem("teacher"); } catch (e) {} setTeacher(); return; }
+  $("lockForm").hidden = !$("lockForm").hidden; $("lockMsg").textContent = ""; $("lockPw").value = ""; $("lockPw").focus();
+});
+$("lock").addEventListener("submit", e => {
+  e.preventDefault();
+  if (pwHash($("lockPw").value.trim()) !== 1992699658) { $("lockMsg").textContent = "Неверный пароль"; $("lockPw").select(); return; }
+  teacher = true; try { sessionStorage.setItem("teacher", "1"); } catch (e) {}
+  setTeacher();
+});
+if (teacher) $("lockOpen").textContent = "Скрыть ответы";
 $("qNext").addEventListener("click", next);
 $("qExit").addEventListener("click", finish);
 $("rAgain").addEventListener("click", () => run.tasks ? startTasks(run.topic) : start(run.topic));
